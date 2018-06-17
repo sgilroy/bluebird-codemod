@@ -20,6 +20,12 @@ Promise.promisify(fn)();
 Promise.promisify(obj.foo, obj)('something');
 Promise.promisify(obj.foo)('something');
 
+// .then
+Promise.promisify(obj.foo, obj)('something').then(result => {});
+
+// .spread
+Promise.promisify(obj.foo, obj)('something').spread((result1, result2) => {});
+
 // already converted
 Promise.promisify(obj.foo, {
   context: obj

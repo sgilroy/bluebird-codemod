@@ -38,11 +38,20 @@ The calling convention for [`Promise.promisify()` has changed](http://bluebirdjs
 >Promise.promisify(fn, {context: ctx});
 >```
 
+This calling convention change was introduced in order to support a new option when promisifying, `multiArgs`.
+>Setting `multiArgs` to `true` means the resulting promise will always fulfill with an array of the callback's success value(s). This is needed because promises only support a single success value while some callback API's have multiple success value. The default is to ignore all but the first success value of a callback function.
+
 ### Included Scripts
 
 #### `call-promisify-with-options`
 
 Converts the second argument of calls to `Promise.promisify(fn, ctx)` into `Promise.promisify(fn, {context: ctx})`.
+
+If the expression has a `.spread` call chained onto it, the script will infer that `multiArgs` should be used so that
+the multiple arguments (not just the first) from the callback can be accessed. Note that this may result in some
+false-positives where the `multiArgs` option will need to be manually removed after the script is run. Also, some cases
+where `multiArgs` is needed will not be detected automatically and the option will need to be added manually in order
+to restore the behavior from the pre-3.x version of bluebird. See the unit tests for examples.
 
 ```sh
 jscodeshift -t bluebird-codemod/call-promisify-with-options.js <path>

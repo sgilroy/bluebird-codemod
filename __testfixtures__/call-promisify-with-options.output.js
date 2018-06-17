@@ -24,6 +24,17 @@ Promise.promisify(obj.foo, {
 })('something');
 Promise.promisify(obj.foo)('something');
 
+// .then
+Promise.promisify(obj.foo, {
+  context: obj
+})('something').then(result => {});
+
+// .spread
+Promise.promisify(obj.foo, {
+  multiArgs: true,
+  context: obj
+})('something').spread((result1, result2) => {});
+
 // already converted
 Promise.promisify(obj.foo, {
   context: obj
