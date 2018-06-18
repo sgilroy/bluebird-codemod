@@ -41,6 +41,11 @@ The calling convention for [`Promise.promisify()` has changed](http://bluebirdjs
 This calling convention change was introduced in order to support a new option when promisifying, `multiArgs`.
 >Setting `multiArgs` to `true` means the resulting promise will always fulfill with an array of the callback's success value(s). This is needed because promises only support a single success value while some callback API's have multiple success value. The default is to ignore all but the first success value of a callback function.
 
+#### `.spread`'s second argument has been removed
+
+Previously, `.spread` supported a rejected handler as a second argument, like `.then`. This support for a second
+argument has been removed and now a separate `.catch` call should be used instead.
+
 ### Included Scripts
 
 #### `call-promisify-with-options`
@@ -55,4 +60,14 @@ to restore the behavior from the pre-3.x version of bluebird. See the unit tests
 
 ```sh
 jscodeshift -t bluebird-codemod/call-promisify-with-options.js <path>
+```
+
+#### `spread-catch-second-argument`
+
+Converts calls to `.spread` that use a second argument to a combination of `.spread` (for the fulfilled handler) and
+`.catch` (for the rejected handler). That is, calls of `promise.spread(fulfilledHandler, rejectedHandler)` are converted to
+`promise.spread(fulfilledHandler).catch(rejectedHandler)`.
+
+```sh
+jscodeshift -t bluebird-codemod/spread-catch-second-argument.js <path>
 ```
